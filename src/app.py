@@ -6,16 +6,24 @@ import requests
 from dotenv import load_dotenv
 import os
 
+# get API key
 load_dotenv()
 TMDB_API_KEY = os.getenv('TMDB_API_KEY') 
+
+# get absolute path
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+MODEL_DIR = os.path.join(ROOT_DIR, 'model', 'cosine_sim.pkl')
+MOVIES_CSV_PATH = os.path.join(ROOT_DIR, 'data', 'preprocessed', 'pre_movies.csv')
+MOVIES_LIST_PATH = os.path.join(ROOT_DIR, 'data', 'preprocessed', 'movies_list.pkl')
 
 # --- Load Data ---
 @st.cache_resource
 def load_data():
-    with open('../model/cosine_sim.pkl', 'rb') as f:
+    with open(MODEL_DIR, 'rb') as f:
         cosine_sim = pickle.load(f)
-    movies = pd.read_csv('../data/preprocessed/pre_movies.csv')
-    movies_list = pd.read_pickle('../data/preprocessed/movies_list.pkl')
+    movies = pd.read_csv(MOVIES_CSV_PATH)
+    movies_list = pd.read_pickle(MOVIES_LIST_PATH)
     return cosine_sim, movies, movies_list
 
 cosine_sim, movies, movies_list = load_data() 
